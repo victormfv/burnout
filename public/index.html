@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estudio de Burnout · UMF 19 Plus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{
+    --ink:#1B3A38; --ink-soft:#3E5654; --paper:#F7F3EA; --paper2:#EFE6D3;
+    --card:#FFFDF8; --amber:#C08A3E; --sage:#7C9885; --flag:#A8503A;
+    --line: rgba(27,58,56,0.14); --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--paper); color:var(--ink); font-family:'Inter',sans-serif; min-height:100vh; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:640px; margin:0 auto; padding:28px 20px 80px;}
+  h1,h2,h3{font-family:'Source Serif 4',serif; color:var(--ink); margin:0 0 6px; line-height:1.15;}
+  h1{font-size:28px; font-weight:700;} h2{font-size:21px; font-weight:600;} h3{font-size:16px; font-weight:600; margin-bottom:12px;}
+  p{line-height:1.55; color:var(--ink-soft); margin:0 0 14px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--amber); margin-bottom:10px; display:block;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px 20px; margin-bottom:16px; box-shadow:0 1px 2px rgba(27,58,56,0.04);}
+  .btn{appearance:none; border:none; font-family:'Inter',sans-serif; font-weight:600; font-size:15px; padding:14px 22px; border-radius:10px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; transition:transform .12s ease, opacity .12s ease; width:100%;}
+  .btn:active{transform:scale(0.98);}
+  .btn-primary{background:var(--ink); color:var(--paper);}
+  .btn-primary:disabled{opacity:0.35; cursor:not-allowed;}
+  .btn-ghost{background:transparent; color:var(--ink-soft); border:1px solid var(--line);}
+  .btn-amber{background:var(--amber); color:#fff;}
+  .row-btns{display:flex; gap:10px;}
+  .link-small{text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); text-decoration:underline; cursor:pointer; margin-top:22px; background:none; border:none;}
+  .gauge{display:flex; gap:5px; margin-bottom:22px;}
+  .gauge .seg{height:6px; flex:1; border-radius:4px; background:var(--paper2); overflow:hidden; position:relative;}
+  .gauge .seg.fill::after{content:''; position:absolute; inset:0; background:linear-gradient(90deg, var(--sage), var(--amber));}
+  .gauge-label{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); letter-spacing:.04em; margin-bottom:8px;}
+  label.field{display:block; margin-bottom:16px;}
+  label.field .lbl{display:block; font-weight:600; font-size:14px; margin-bottom:8px;}
+  select, input[type=text], input[type=number], input[type=password]{width:100%; padding:12px 12px; border-radius:9px; border:1px solid var(--line); background:#fff; font-family:'Inter',sans-serif; font-size:15px; color:var(--ink);}
+  .choice-group{display:flex; flex-wrap:wrap; gap:8px;}
+  .choice{border:1px solid var(--line); background:#fff; padding:9px 14px; border-radius:8px; font-size:13.5px; cursor:pointer; color:var(--ink-soft); user-select:none;}
+  .choice.sel{background:var(--ink); border-color:var(--ink); color:var(--paper); font-weight:600;}
+  .mbi-item{border-top:1px solid var(--line); padding:16px 0;}
+  .mbi-item:first-child{border-top:none; padding-top:0;}
+  .mbi-num{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--amber); margin-bottom:4px; display:block;}
+  .mbi-text{font-size:14.5px; font-weight:500; margin-bottom:12px; color:var(--ink);}
+  .scale-row{display:flex; gap:6px;}
+  .scale-btn{flex:1; aspect-ratio:1; border-radius:9px; border:1px solid var(--line); background:#fff; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; color:var(--ink-soft); cursor:pointer;}
+  .scale-btn.sel{background:var(--sage); border-color:var(--sage); color:#fff;}
+  .subhead{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:26px 0 6px; border-bottom:1px solid var(--line); padding-bottom:8px;}
+  .subhead:first-child{margin-top:0;}
+  .checkline{display:flex; align-items:flex-start; gap:10px; background:var(--paper2); border-radius:10px; padding:14px; margin:14px 0;}
+  .checkline input{margin-top:3px;}
+  .checkline span{font-size:13.5px; color:var(--ink-soft); line-height:1.5;}
+  .err{color:var(--flag); font-size:13px; margin-top:-8px; margin-bottom:14px; display:none;}
+  .code-badge{font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; letter-spacing:.06em; color:var(--ink); background:var(--paper2); border-radius:10px; padding:16px; text-align:center; margin:18px 0;}
+  #qrbox{display:flex; justify-content:center; padding:18px 0;}
+  #qrbox canvas, #qrbox img{border-radius:10px;}
+  .stat{display:flex; justify-content:space-between; align-items:center; font-size:13.5px; color:var(--ink-soft); margin-bottom:4px;}
+  .stat b{color:var(--ink); font-family:'IBM Plex Mono',monospace;}
+  .hidden{display:none !important;}
+  .footer-note{font-size:12px; color:var(--ink-soft); opacity:.75; text-align:center; margin-top:10px;}
+  .diag{font-family:'IBM Plex Mono',monospace; font-size:12.5px; white-space:pre-wrap; margin-top:10px;}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+const AE_ITEMS = [1,2,3,6,8,13,14,16,20];
+const DP_ITEMS = [5,10,11,15,22];
+const RP_ITEMS = [4,7,9,12,17,18,19,21];
+
+const MBI_TEXT = {
+  1:"Me siento emocionalmente agotado/a por mi trabajo.",
+  2:"Me siento agotado/a al final de la jornada de trabajo.",
+  3:"Me siento cansado/a cuando me levanto por la mañana y tengo que enfrentarme a otro día de trabajo.",
+  4:"Puedo entender con facilidad lo que sienten mis pacientes.",
+  5:"Creo que trato a algunos pacientes como si fueran objetos impersonales.",
+  6:"Trabajar directamente con personas me produce estrés.",
+  7:"Trato muy eficazmente los problemas de mis pacientes.",
+  8:"Me siento agotado/a por mi trabajo.",
+  9:"Siento que estoy influyendo positivamente en la vida de otras personas a través de mi trabajo.",
+  10:"Me he vuelto más insensible con la gente desde que ejerzo esta profesión.",
+  11:"Me preocupa el hecho de que este trabajo me esté endureciendo emocionalmente.",
+  12:"Me siento muy activo/a.",
+  13:"Me siento frustrado/a con mi trabajo.",
+  14:"Creo que estoy trabajando demasiado.",
+  15:"Realmente no me importa lo que les ocurrirá a algunos de los pacientes que atiendo.",
+  16:"Trabajar directamente con personas me genera mucha tensión.",
+  17:"Puedo crear fácilmente una atmósfera relajada con mis pacientes.",
+  18:"Me siento animado/a después de trabajar con mis pacientes.",
+  19:"He realizado muchas cosas que merecen la pena en este trabajo.",
+  20:"Me siento al límite de mis posibilidades.",
+  21:"En mi trabajo trato los problemas emocionales con mucha calma.",
+  22:"Siento que los pacientes me culpan por algunos de sus problemas."
+};
+
+let state = { view: 'landing', consentAccepted: false, consentInitials: '', demo: {}, mbi: {}, adminKey: '' };
+
+const app = document.getElementById('app');
+
+function gauge(step){
+  let segs = '';
+  for(let i=1;i<=3;i++) segs += `<div class="seg ${i<=step?'fill':''}"></div>`;
+  return `<div class="gauge-label">Paso ${step} de 3</div><div class="gauge">${segs}</div>`;
+}
+
+function render(){
+  if(state.view==='landing') return renderLanding();
+  if(state.view==='consent') return renderConsent();
+  if(state.view==='demo') return renderDemo();
+  if(state.view==='mbi') return renderMbi();
+  if(state.view==='done') return renderDone();
+  if(state.view==='admin') return renderAdmin();
+}
+
+function renderLanding(){
+  app.innerHTML = `
+    <span class="eyebrow">UMF 19 Plus · Investigación</span>
+    <h1>Bienestar y desgaste profesional en personal de salud</h1>
+    <p>Este cuestionario forma parte de un estudio sobre el síndrome de burnout en médicos y enfermeras especialistas en medicina familiar. Toma entre 10 y 15 minutos.</p>
+    <div class="card">
+      <p style="margin-bottom:0;">Tus respuestas son <b>anónimas</b>: no se solicita tu nombre y cada envío se guarda de forma independiente, identificado solo con un código. Puedes suspender tu participación en cualquier momento sin ninguna consecuencia.</p>
+    </div>
+    <button class="btn btn-primary" onclick="goTo('consent')">Comenzar cuestionario</button>
+    <button class="link-small" onclick="goTo('admin')">Panel del investigador →</button>
+  `;
+}
+
+function renderConsent(){
+  app.innerHTML = `
+    ${gauge(1)}
+    <h2>Consentimiento informado</h2>
+    <div class="card">
+      <p><b>Título:</b> Síndrome de Burnout en Médicos y Enfermeras Especialistas en Medicina Familiar de la UMF 19 Plus.</p>
+      <p><b>Procedimiento:</b> Si aceptas participar, responderás una hoja de datos sociodemográficos y el Inventario de Burnout de Maslach (MBI-HSS). Duración estimada: 15–20 minutos.</p>
+      <p><b>Riesgos:</b> Estudio de riesgo mínimo. El único riesgo posible es una leve incomodidad emocional al responder; puedes detenerte cuando quieras.</p>
+      <p><b>Confidencialidad:</b> El cuestionario es anónimo. No se registra tu nombre ni datos que permitan identificarte; la información se maneja de forma agrupada y con fines académicos.</p>
+      <p style="margin-bottom:0;"><b>Voluntariedad:</b> Tu participación es libre. Puedes negarte o retirarte en cualquier momento sin repercusión laboral alguna.</p>
+    </div>
+    <div class="checkline">
+      <input type="checkbox" id="chkConsent" ${state.consentAccepted?'checked':''} onchange="state.consentAccepted=this.checked">
+      <span>He leído la información anterior, entiendo que mi participación es voluntaria y anónima, y acepto participar en este estudio.</span>
+    </div>
+    <label class="field">
+      <span class="lbl">Tus iniciales (opcional, solo como constancia de aceptación — no se usan para identificarte)</span>
+      <input type="text" maxlength="6" value="${state.consentInitials}" oninput="state.consentInitials=this.value">
+    </label>
+    <div class="err" id="errConsent">Marca la casilla para continuar.</div>
+    <div class="row-btns">
+      <button class="btn btn-ghost" onclick="goTo('landing')">Atrás</button>
+      <button class="btn btn-primary" onclick="submitConsent()">Continuar</button>
+    </div>
+  `;
+}
+function submitConsent(){
+  if(!state.consentAccepted){ document.getElementById('errConsent').style.display='block'; return; }
+  goTo('demo');
+}
+
+const DEMO_FIELDS = [
+  {group:'Datos generales', items:[
+    {id:'edad', label:'1. Edad (años cumplidos)', type:'number'},
+    {id:'sexo', label:'2. Sexo', type:'choice', opts:['Femenino','Masculino','Otro / Prefiero no decir']},
+    {id:'estadoCivil', label:'3. Estado civil', type:'choice', opts:['Soltero/a','Casado/a o unión libre','Divorciado/a','Viudo/a']},
+    {id:'tieneHijos', label:'4. ¿Tiene hijos?', type:'choice', opts:['Sí','No']},
+    {id:'numHijos4', label:'   ¿Cuántos?', type:'number', showIf:{f:'tieneHijos',v:'Sí'}},
+  ]},
+  {group:'Datos laborales', items:[
+    {id:'perfil', label:'5. Perfil profesional', type:'choice', opts:['Médico/a especialista en Medicina Familiar','Enfermera/o especialista en Medicina Familiar']},
+    {id:'antiguedadUMF', label:'6. Antigüedad en la UMF 19 Plus', type:'choice', opts:['Menos de 1 año','1 a 5 años','6 a 10 años','Más de 10 años']},
+    {id:'antiguedadIMSS', label:'7. Antigüedad total en el IMSS', type:'choice', opts:['Menos de 1 año','1 a 5 años','6 a 10 años','Más de 10 años']},
+    {id:'turno', label:'8. Turno de trabajo', type:'choice', opts:['Matutino','Vespertino','Nocturno','Jornada acumulada']},
+    {id:'contratacion', label:'9. Tipo de contratación', type:'choice', opts:['Base / definitivo','Eventual','Otro']},
+    {id:'otroEmpleo', label:'10. ¿Tiene otro empleo además del IMSS?', type:'choice', opts:['Sí','No']},
+  ]},
+  {group:'Etapa del ciclo familiar', items:[
+    {id:'tienePareja', label:'11. ¿Tiene pareja actualmente?', type:'choice', opts:['Sí','No']},
+    {id:'tieneHijos12', label:'12. ¿Tiene hijos?', type:'choice', opts:['Sí','No']},
+    {id:'numHijos12', label:'   Número de hijos', type:'number', showIf:{f:'tieneHijos12',v:'Sí'}},
+    {id:'edadMenor', label:'   Edad del hijo menor (años)', type:'number', showIf:{f:'tieneHijos12',v:'Sí'}},
+    {id:'hijosViven', label:'13. ¿Sus hijos viven con usted?', type:'choice', opts:['Sí','No','Algunos'], showIf:{f:'tieneHijos12',v:'Sí'}},
+  ]}
+];
+
+function renderDemo(){
+  let html = `${gauge(2)}<h2>Datos sociodemográficos</h2><p>Marca o escribe la opción que corresponda.</p>`;
+  DEMO_FIELDS.forEach(g=>{
+    html += `<div class="subhead">${g.group}</div>`;
+    g.items.forEach(f=>{
+      if(f.showIf && state.demo[f.showIf.f] !== f.showIf.v) return;
+      if(f.type==='number'){
+        html += `<label class="field"><span class="lbl">${f.label}</span>
+          <input type="number" min="0" value="${state.demo[f.id]||''}" oninput="state.demo['${f.id}']=this.value; scheduleRerender()"></label>`;
+      } else {
+        html += `<label class="field"><span class="lbl">${f.label}</span><div class="choice-group">`;
+        f.opts.forEach(o=>{
+          const sel = state.demo[f.id]===o ? 'sel':'';
+          html += `<div class="choice ${sel}" onclick="setDemo('${f.id}','${o.replace(/'/g,"\\'")}')">${o}</div>`;
+        });
+        html += `</div></label>`;
+      }
+    });
+  });
+  html += `<div class="err" id="errDemo">Completa los campos requeridos antes de continuar.</div>
+    <div class="row-btns">
+      <button class="btn btn-ghost" onclick="goTo('consent')">Atrás</button>
+      <button class="btn btn-primary" onclick="submitDemo()">Continuar</button>
+    </div>`;
+  app.innerHTML = html;
+}
+let rerenderTimer;
+function scheduleRerender(){ clearTimeout(rerenderTimer); rerenderTimer=setTimeout(renderDemo, 400); }
+function setDemo(id,val){ state.demo[id]=val; renderDemo(); }
+function submitDemo(){
+  const required = ['edad','sexo','estadoCivil','tieneHijos','perfil','antiguedadUMF','antiguedadIMSS','turno','contratacion','otroEmpleo','tienePareja','tieneHijos12'];
+  const missing = required.some(id => !state.demo[id]);
+  if(missing){ document.getElementById('errDemo').style.display='block'; return; }
+  goTo('mbi');
+}
+
+function renderMbi(){
+  let html = `${gauge(3)}<h2>Inventario de Burnout de Maslach (MBI-HSS)</h2>
+  <p>Indica con qué frecuencia experimentas cada situación.</p>
+  <div class="card" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink-soft); line-height:1.8;">
+    0 Nunca &nbsp;·&nbsp; 1 Pocas veces al año &nbsp;·&nbsp; 2 Una vez al mes o menos<br>
+    3 Unas pocas veces al mes &nbsp;·&nbsp; 4 Una vez a la semana<br>
+    5 Pocas veces a la semana &nbsp;·&nbsp; 6 Todos los días
+  </div>
+  <div class="card">`;
+  for(let n=1;n<=22;n++){
+    const val = state.mbi[n];
+    let scaleBtns = '';
+    for(let s=0;s<=6;s++){
+      scaleBtns += `<button type="button" class="scale-btn ${val===s?'sel':''}" onclick="setMbi(${n},${s})">${s}</button>`;
+    }
+    html += `<div class="mbi-item">
+      <span class="mbi-num">Ítem ${n}</span>
+      <div class="mbi-text">${MBI_TEXT[n]}</div>
+      <div class="scale-row">${scaleBtns}</div>
+    </div>`;
+  }
+  html += `</div>
+  <div class="err" id="errMbi">Responde todos los enunciados antes de enviar.</div>
+  <div class="row-btns">
+    <button class="btn btn-ghost" onclick="goTo('demo')">Atrás</button>
+    <button class="btn btn-amber" id="btnSend" onclick="finishSurvey()">Enviar respuestas</button>
+  </div>`;
+  app.innerHTML = html;
+}
+function setMbi(n,v){ state.mbi[n]=v; renderMbi(); }
+
+async function finishSurvey(){
+  const answered = Object.keys(state.mbi).length;
+  if(answered < 22){
+    document.getElementById('errMbi').style.display='block';
+    document.getElementById('errMbi').scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  const btn = document.getElementById('btnSend');
+  if(btn){ btn.disabled = true; btn.textContent = 'Guardando…'; }
+
+  const payload = {
+    consent: { initials: state.consentInitials || null },
+    demografico: state.demo,
+    mbi: state.mbi
+  };
+
+  let saveOk = false, saveErrorMsg = '', codigo = 'SIN-CONFIRMAR';
+  try{
+    const resp = await fetch('/api/responses', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const data = await resp.json().catch(()=>({}));
+    if(!resp.ok){ throw new Error(data.error || ('El servidor respondió con error ' + resp.status)); }
+    codigo = data.codigo;
+    saveOk = true;
+  }catch(e){
+    saveErrorMsg = e && e.message ? e.message : String(e);
+  }
+
+  state.lastCode = codigo;
+  state.saveOk = saveOk;
+  state.saveErrorMsg = saveErrorMsg;
+  goTo('done');
+}
+
+function renderDone(){
+  const warn = state.saveOk === false ? `
+    <div class="checkline" style="background:#F3E4DE;">
+      <span style="font-size:18px;">⚠️</span>
+      <span>Tu cuestionario se completó, pero no pudimos confirmar que quedó guardado en el servidor (${state.saveErrorMsg || 'error desconocido'}). Avísale al investigador.</span>
+    </div>` : '';
+  app.innerHTML = `
+    <h2>Gracias por tu participación</h2>
+    <p>${state.saveOk === false ? 'Completaste el cuestionario.' : 'Tu respuesta se guardó de forma anónima e independiente.'} Este es tu código de constancia:</p>
+    <div class="code-badge">${state.lastCode}</div>
+    ${warn}
+    <p class="footer-note">Anota este código si lo deseas. No está vinculado a tu nombre ni a ningún dato que te identifique.</p>
+    <button class="btn btn-primary" onclick="resetAll()">Finalizar</button>
+  `;
+}
+
+function resetAll(){
+  state = { view:'landing', consentAccepted:false, consentInitials:'', demo:{}, mbi:{}, adminKey: state.adminKey };
+  render();
+}
+
+function renderAdmin(){
+  const savedKey = localStorage.getItem('burnout_admin_key') || '';
+  const defaultUrl = window.location.origin + window.location.pathname;
+  app.innerHTML = `
+    <span class="eyebrow">Panel del investigador</span>
+    <h2>Compartir y exportar</h2>
+    <div class="card">
+      <p style="margin-bottom:10px;">Este QR apunta a esta misma página, en tu propio servidor.</p>
+      <label class="field"><span class="lbl">Enlace a codificar</span>
+        <input type="text" id="qrUrl" value="${defaultUrl}">
+      </label>
+      <button class="btn btn-ghost" onclick="regenQr()">Generar / actualizar QR</button>
+      <div id="qrbox"></div>
+    </div>
+    <div class="card">
+      <label class="field"><span class="lbl">Clave de administrador</span>
+        <input type="password" id="adminKeyInput" value="${savedKey}" placeholder="La misma que definiste en ADMIN_KEY">
+      </label>
+      <button class="btn btn-ghost" onclick="guardarClave()">Guardar clave en este navegador</button>
+    </div>
+    <div class="card" id="statsCard">
+      <h3>Respuestas recibidas</h3>
+      <div class="stat"><span>—</span><button class="btn btn-ghost" style="width:auto; padding:8px 14px;" onclick="loadStats()">Actualizar</button></div>
+    </div>
+    <div class="card">
+      <h3>Diagnóstico del servidor</h3>
+      <button class="btn btn-ghost" onclick="probarConexion()">Probar conexión</button>
+      <div id="diagResult" class="diag"></div>
+    </div>
+    <button class="btn btn-amber" id="btnExport" onclick="exportCsv()">Descargar respuestas (CSV)</button>
+    <button class="link-small" onclick="goTo('landing')">← Volver</button>
+  `;
+  state.adminKey = savedKey;
+  regenQr();
+  loadStats();
+}
+
+function regenQr(){
+  const url = document.getElementById('qrUrl').value.trim();
+  const box = document.getElementById('qrbox');
+  box.innerHTML = '';
+  if(!url) return;
+  new QRCode(box, { text: url, width: 200, height: 200, colorDark: "#1B3A38", colorLight: "#FFFDF8" });
+}
+
+function guardarClave(){
+  const key = document.getElementById('adminKeyInput').value;
+  state.adminKey = key;
+  localStorage.setItem('burnout_admin_key', key);
+  loadStats();
+}
+
+async function loadStats(){
+  const card = document.getElementById('statsCard');
+  const key = state.adminKey || (document.getElementById('adminKeyInput') && document.getElementById('adminKeyInput').value) || '';
+  try{
+    const resp = await fetch('/api/count', { headers: {'x-admin-key': key} });
+    if(!resp.ok){
+      const data = await resp.json().catch(()=>({}));
+      card.innerHTML = `<h3>Respuestas recibidas</h3><div class="stat"><span>${data.error || ('Error ' + resp.status)}</span></div>`;
+      return;
+    }
+    const data = await resp.json();
+    card.innerHTML = `<h3>Respuestas recibidas</h3><div class="stat"><span>Total de cuestionarios guardados</span><b>${data.total}</b></div>`;
+  }catch(e){
+    card.innerHTML = `<h3>Respuestas recibidas</h3><div class="stat"><span>No se pudo conectar con el servidor: ${e.message}</span></div>`;
+  }
+}
+
+async function probarConexion(){
+  const box = document.getElementById('diagResult');
+  box.textContent = 'Probando…';
+  try{
+    const resp = await fetch('/api/health');
+    const data = await resp.json();
+    box.textContent = resp.ok ? ('✓ Servidor activo. Hora del servidor: ' + data.time) : ('✗ El servidor respondió con error ' + resp.status);
+  }catch(e){
+    box.textContent = '✗ No se pudo contactar al servidor: ' + e.message + '\n\nRevisa que el servidor (node server.js) esté corriendo y que estés accediendo por la misma URL donde corre.';
+  }
+}
+
+async function exportCsv(){
+  const btn = document.getElementById('btnExport');
+  const key = state.adminKey || (document.getElementById('adminKeyInput') && document.getElementById('adminKeyInput').value) || '';
+  btn.disabled = true; btn.textContent = 'Preparando archivo…';
+  try{
+    const resp = await fetch('/api/export', { headers: {'x-admin-key': key} });
+    if(!resp.ok){
+      const data = await resp.json().catch(()=>({}));
+      alert(data.error || ('Error ' + resp.status));
+      return;
+    }
+    const blob = await resp.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'burnout_respuestas_' + new Date().toISOString().slice(0,10) + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }catch(e){
+    alert('Error al exportar: ' + e.message);
+  }
+  btn.disabled = false; btn.textContent = 'Descargar respuestas (CSV)';
+}
+
+function goTo(v){ state.view = v; window.scrollTo(0,0); render(); }
+render();
+</script>
+</body>
+</html>
