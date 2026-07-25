@@ -5,13 +5,37 @@ informado, el MBI-HSS y la hoja sociodemográfica desde un solo enlace / QR,
 guardando cada respuesta de forma independiente en tu propio servidor.
 
 ## Requisitos
-- Node.js 16 o superior instalado en tu servidor.
+- Node.js 18 o superior instalado en tu servidor o en tu entorno local.
 
 ## Instalación
 ```bash
 cd burnout-app
 npm install
 ```
+
+## Despliegue en Vercel + Airtable
+1. Crea una base en Airtable y una tabla llamada `Respuestas`.
+2. Añade estas columnas (fields) en la tabla:
+   - `codigo`
+   - `guardadoEn`
+   - `iniciales`
+   - `demografico`
+   - `mbi`
+   - `AE_suma`
+   - `AE_nivel`
+   - `DP_suma`
+   - `DP_nivel`
+   - `RP_suma`
+   - `RP_nivel`
+   - `Burnout_severo`
+3. En el dashboard de Vercel, define estas variables de entorno:
+   - `AIRTABLE_TOKEN`
+   - `AIRTABLE_BASE`
+   - `ADMIN_KEY`
+4. Conecta tu repo a Vercel y despliega.
+
+> En Vercel, el frontend se sirve desde `public/index.html` y la lógica de guardado/exportación se ejecuta en `api/`.
+> El directorio `data/` solo se usa para la versión local autoalojada con `server.js`.
 
 ## Configurar la clave de administrador (obligatorio antes de usarlo real)
 El panel del investigador (exportar CSV, ver totales) está protegido con una
