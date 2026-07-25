@@ -2,10 +2,11 @@
   "name": "burnout-umf19-survey",
   "version": "1.0.0",
   "private": true,
-  "description": "Encuesta autoalojada de burnout (MBI-HSS) para la UMF 19 Plus",
+  "description": "Encuesta de burnout (MBI-HSS) para la UMF 19 Plus",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "vercel-build": "echo 'No build step required for static + api'"
   },
   "engines": {
     "node": ">=18"
