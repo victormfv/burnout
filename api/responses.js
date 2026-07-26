@@ -54,7 +54,6 @@ module.exports = async (req, res) => {
   const nivelDP = clasificar(DP, 'DP');
   const nivelRP = clasificar(RP, 'RP');
   const burnoutSevero = (nivelAE === 'Alto' && nivelDP === 'Alto' && nivelRP === 'Bajo') ? 'Presente' : 'Ausente';
-  const fecha = new Date().toISOString();
   const codigo = generarCodigo();
 
   const payload = {
@@ -62,7 +61,6 @@ module.exports = async (req, res) => {
       {
         fields: {
           codigo,
-          fecha,
           iniciales: consent.initials || '',
           demografico: JSON.stringify(demografico),
           mbi: JSON.stringify(mbi),
