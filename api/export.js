@@ -92,7 +92,8 @@ module.exports = async (req, res) => {
 
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', 'attachment; filename=burnout_respuestas.csv');
-    res.send(rows.join('\r\n'));
+    const csv = '\uFEFF' + rows.join('\r\n');
+    res.send(csv);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
