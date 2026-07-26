@@ -5,6 +5,12 @@ const AE_ITEMS = [1, 2, 3, 6, 8, 13, 14, 16, 20];
 const DP_ITEMS = [5, 10, 11, 15, 22];
 const RP_ITEMS = [4, 7, 9, 12, 17, 18, 19, 21];
 
+const generarCodigo = () => {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const randomChars = Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+  return `${randomChars.slice(0, 3)}-${randomChars.slice(3)}`;
+};
+
 const sumaItems = (mbi, items) => items.reduce((acc, n) => acc + (Number(mbi[n]) || 0), 0);
 const clasificar = (valor, dim) => {
   if (dim === 'AE') {
@@ -48,15 +54,15 @@ module.exports = async (req, res) => {
   const nivelDP = clasificar(DP, 'DP');
   const nivelRP = clasificar(RP, 'RP');
   const burnoutSevero = (nivelAE === 'Alto' && nivelDP === 'Alto' && nivelRP === 'Bajo') ? 'Presente' : 'Ausente';
-  const guardadoEn = new Date().toISOString();
-  const codigo = guardadoEn.replace(/[:.]/g, '').slice(0, 15);
+  const fecha = new Date().toISOString();
+  const codigo = generarCodigo();
 
   const payload = {
     records: [
       {
         fields: {
           codigo,
-          guardadoEn,
+          fecha,
           iniciales: consent.initials || '',
           demografico: JSON.stringify(demografico),
           mbi: JSON.stringify(mbi),
